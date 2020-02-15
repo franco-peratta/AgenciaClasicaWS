@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const Programa = require('../models/programa');
-const controller = require('../controllers/programas');
 
-router.get('/', controller.programas_get);
+router.get('/', function (req, res) {
+    Programa.find().then((data) => {
+        res.status(200).json(data);
+    })
+        .catch(err => {
+            res.status(500).send("No se pudo obtener los programas");
+        });
+});
 
 router.post('/', function (req, res) {
 
