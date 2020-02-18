@@ -48,5 +48,28 @@ const delete_programa = async function (req, res) {
     }
 }
 
+// No funciona todavia
+const patch_programa = async function (req, res) {
+    let programa = {
+        "nombre": req.body.nombre,
+        "destino": req.body.destino,
+        "duracion": req.body.duracion,
+        "precio": req.body.precio,
+        "destacado": req.body.destacado
+    }
 
-module.exports = { get_programas, post_programa, delete_programa }
+    var query = { _id: req.body.id };
+
+    try {
+        const updated = await Programa.updateMany(query, programa);
+        const response = new Response("Ok", updated);
+        res.status(200).json(response);
+    }
+    catch (err) {
+        const response = new Response(err, {});
+        res.status(500).json(response);
+    }
+
+};
+
+module.exports = { get_programas, post_programa, delete_programa, patch_programa }

@@ -8,6 +8,8 @@ router.post('/', ProgramasService.post_programa);
 
 router.delete('/:id', ProgramasService.delete_programa);
 
+router.patch('/', ProgramasService.patch_programa)
+
 // falta put para actualizar
 
 module.exports = router;
