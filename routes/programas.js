@@ -1,38 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Programa = require('../models/programa');
+const ProgramasService = require('../services/programas.service');
 
-router.get('/', function (req, res) {
-    Programa.find().then((data) => {
-        res.status(200).json(data);
-    })
-        .catch(err => {
-            res.status(500).send("No se pudo obtener los programas");
-        });
-});
+router.get('/', ProgramasService.get_programas);
 
-router.post('/', function (req, res) {
+router.post('/', ProgramasService.post_programa);
 
-    const programa = new Programa({
-        // Aca crear el programa para enchufar en la BD usando lo que me llega en req.body        
-        "nombre": req.body.nombre,
-        "destino": req.body.destino,
-        "fotos": req.body.fotos,
-        "video": req.body.video,
-        "duracion": req.body.duracion,
-        "precio": req.body.precio,
-        "descripcion": req.body.descripcion,
-        "itinerario": req.body.itinerario,
-        "destacado": req.body.destacado
-    });
+router.delete('/:id', ProgramasService.delete_programa);
 
-    // Save retorna una promesa
-    programa.save().then((data) => {
-        res.status(201).send(data);
-    })
-        .catch(err => {
-            res.status(500).send("Error al postear programa - " + err);
-        });
-});
+// falta put para actualizar
 
 module.exports = router;
