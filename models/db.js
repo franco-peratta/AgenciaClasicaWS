@@ -3,7 +3,10 @@ var mongoose = require('mongoose');
 // Connect to DB
 mongoose.connect(
     process.env.DB_CONNECTION,
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
 );
 
 var db = mongoose.connection;
