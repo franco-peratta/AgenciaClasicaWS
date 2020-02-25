@@ -2,6 +2,7 @@ const Mensaje = require('../models/mensaje');
 const Response = require('../models/response');
 
 const get_mensajes = async function (req, res) {
+
     try {
         const data = await Mensaje.find().sort([['create_ts', -1]]);
         const response = new Response("Ok", data);
