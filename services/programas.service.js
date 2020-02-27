@@ -13,6 +13,33 @@ const get_programas = function (req, res) {
         });
 }
 
+const get_programas_destacados = function (req, res) {
+    Programa.find({ destacado: true }).then((data) => {
+
+        const response = new Response("Ok", data);
+        res.status(200).json(response);
+
+    })
+        .catch(err => {
+            res.status(500).send("No se pudo obtener los programas destacados");
+        });
+}
+
+const get_programa_id = function (req, res) {
+
+    const id = req.params.id;
+
+    Programa.findById(id, (err, data) => {
+
+        if (err) {
+            res.status(500).send("No se pudo obtener el programa por id");
+        }
+        const response = new Response("Ok", data);
+        res.status(200).json(response);
+
+    });
+}
+
 const post_programa = function (req, res) {
     const programa = new Programa({
         // Aca crear el programa para enchufar en la BD usando lo que me llega en req.body        
@@ -72,4 +99,4 @@ const patch_programa = async function (req, res) {
 
 };
 
-module.exports = { get_programas, post_programa, delete_programa, patch_programa }
+module.exports = { get_programas, get_programa_id, get_programas_destacados, post_programa, delete_programa, patch_programa }

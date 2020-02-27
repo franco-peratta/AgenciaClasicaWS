@@ -6,17 +6,22 @@ var logger = require('morgan');
 var app = express();
 var session = require('express-session');
 var passport = require('passport');
+var cors = require('cors');
 
 // Middlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // VER VER VER si es true o false
 app.use(cookieParser());
+// CORS middleware
+// DEFINIR UN WHITELIST DE SITIOS PERMITIDOS, ACA DEJA PASAR CUALQUIERA
+// https://www.npmjs.com/package/cors#simple-usage-enable-all-cors-requests
+app.use(cors());
 
 // Connect to DB
 const conection = require('./config/db');
 
-// Intento passport session cookies
+// Session setup
 const MongoStore = require('connect-mongo')(session);
 
 const session_store = new MongoStore({
@@ -33,8 +38,6 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 // 1 dia
   }
 })); // Puedo obtener la sesion usando req.session
-
-// Fin del intento xD
 
 // Passport
 require('./config/passport');

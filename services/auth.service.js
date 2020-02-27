@@ -54,7 +54,7 @@ const failure = function (req, res) {
     res.status(401).json(response);
 }
 
-const is_authenticated = function (req, res, next) {
+const is_authenticated = function (req, res, next) {    
     if (req.isAuthenticated()) {
         next();
     }
