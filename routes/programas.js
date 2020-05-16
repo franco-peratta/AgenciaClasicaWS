@@ -13,6 +13,8 @@ router.post('/', AuthService.is_authenticated, ProgramasService.post_programa);
 
 router.delete('/:id', AuthService.is_authenticated, ProgramasService.delete_programa);
 
+router.delete('/', AuthService.is_authenticated, ProgramasService.delete_all);
+
 // NO ANDA VER VER VER
 router.patch('/', AuthService.is_authenticated, ProgramasService.patch_programa);
 

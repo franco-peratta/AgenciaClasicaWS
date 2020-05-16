@@ -1,40 +1,53 @@
 require('dotenv/config');
 var createError = require('http-errors');
 var express = require('express');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
 var session = require('express-session');
 var passport = require('passport');
-var cors = require('cors');
+
 
 // Middlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // VER VER VER si es true o false
-app.use(cookieParser());
-// CORS middleware
-// DEFINIR UN WHITELIST DE SITIOS PERMITIDOS, ACA DEJA PASAR CUALQUIERA
+
+
+// CORS
 // https://www.npmjs.com/package/cors#simple-usage-enable-all-cors-requests
-app.use(cors());
+var cors = require('cors');
+
+var whitelist = process.env.WHITELIST;
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}
+app.use(cors(corsOptions)); // comentar esta linea si quiero usar postman para probar
 
 // Connect to DB
 const conection = require('./config/db');
 
 // Session setup
+// https://www.youtube.com/watch?v=J1qXK66k1y4&list=PLYQSCk-qyTW2ewJ05f_GKHtTIzjynDgjK&index=3
 const MongoStore = require('connect-mongo')(session);
-
 const session_store = new MongoStore({
   mongooseConnection: conection,
   collection: 'sessions'
 });
-// https://www.youtube.com/watch?v=J1qXK66k1y4&list=PLYQSCk-qyTW2ewJ05f_GKHtTIzjynDgjK&index=3
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   store: session_store,
   cookie: {
+    secure: false,
+    httpOnly: false,
     maxAge: 1000 * 60 * 60 * 24 // 1 dia
   }
 })); // Puedo obtener la sesion usando req.session

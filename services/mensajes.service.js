@@ -10,7 +10,7 @@ const get_mensajes = async function (req, res) {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json(new Response(err, {}));
+        res.status(500).json(new Response("No se pudo obtener los mensajes", err));
     }
 };
 
@@ -28,7 +28,7 @@ const post_mensajes = function (req, res) {
         res.status(201).json(response);
     })
         .catch(err => {
-            const response = new Response(err, {});
+            const response = new Response("No se pudo guardar el mensaje", err);
             res.status(500).json(response);
         });
 }
@@ -40,7 +40,7 @@ const delete_mensajes = async function (req, res) {
         res.status(200).json(response);
     }
     catch (err) {
-        const response = new Response(err, {});
+        const response = new Response("No se pudo borrar el mensaje", err);
         res.status(500).json(response);
     }
 }

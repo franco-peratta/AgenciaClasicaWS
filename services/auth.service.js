@@ -3,12 +3,9 @@ const Response = require('../models/response');
 var bcrypt = require('bcrypt');
 
 const create_user = async function (req, res) {
-    // Esto seria lo que tendria que hacer en el frontend creo
     try {
         const salt = await bcrypt.genSalt();
         const hashed_pass = await bcrypt.hash(req.body.password, salt);
-
-        console.log(hashed_pass);
 
         const user = new User({
             mail: req.body.mail,
@@ -21,14 +18,14 @@ const create_user = async function (req, res) {
             res.status(201).json(response);
         })
             .catch(err => {
-                const response = new Response(err, {});
+                const response = new Response("No se pudo crear el usuario", err);
                 res.status(500).json(response);
             });
 
     }
     catch (err) {
-        console.log("catch bcrypt auth");
-        res.send(err);
+        const response = new Response("No se pudo encriptar el password", err);
+        res.status(500).json(response);
     }
 }
 
@@ -36,12 +33,13 @@ const logout = function (req, res, next) {
 
     if (req.isAuthenticated()) {
         req.logout();
+        const response = new Response("Deslogueado con exito", null);
+        res.status(200).json(response);
     }
-
-    console.log(req.session);
-    console.log(req.user);
-
-    res.json("logout succesful");
+    else {
+        const response = new Response("No se pudo desloguear", null);
+        res.status(401).json(response);
+    }
 };
 
 const success = function (req, res) {
@@ -54,7 +52,7 @@ const failure = function (req, res) {
     res.status(401).json(response);
 }
 
-const is_authenticated = function (req, res, next) {    
+const is_authenticated = function (req, res, next) {
     if (req.isAuthenticated()) {
         next();
     }
